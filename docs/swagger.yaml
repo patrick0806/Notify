@@ -1,0 +1,79 @@
+definitions:
+  controller.HealthResponse:
+    properties:
+      redis:
+        type: string
+      server:
+        type: string
+    type: object
+  entities.NewRecomendation:
+    properties:
+      recomendation:
+        type: string
+    type: object
+  entities.Notify:
+    properties:
+      identity:
+        type: string
+      newRecomendation:
+        $ref: '#/definitions/entities.NewRecomendation'
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a orc how recive a notify and send this to a queue and process.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Orc Notify
+  version: "1.0"
+paths:
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: Check orc health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.HealthResponse'
+        "500":
+          description: Internal Server Error
+      summary: Health Check
+      tags:
+      - Health
+  /notifies:
+    post:
+      consumes:
+      - application/json
+      description: Receive a notification and save on redis queue
+      parameters:
+      - description: Notify
+        in: body
+        name: notify
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Notify'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Receive Notify
+      tags:
+      - Notify
+swagger: "2.0"
